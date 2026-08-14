@@ -1,0 +1,66 @@
+{
+  "title": "闭环一 · 记忆找物",
+  "agent_name": "暖眸",
+  "elder_name": "王奶奶",
+  "context": {
+    "weather": "晴",
+    "kitchen_fire_on": false
+  },
+  "initial_memory": [
+    {
+      "type": "item",
+      "object": "老花镜",
+      "location": "客厅茶几",
+      "time": "昨天 14:32",
+      "confidence": 0.9
+    },
+    {
+      "type": "item",
+      "object": "钥匙",
+      "location": "玄关鞋柜",
+      "time": "昨天 17:00",
+      "confidence": 0.95
+    },
+    {
+      "type": "item",
+      "object": "降压药",
+      "location": "餐桌药盒",
+      "time": "昨天 08:00",
+      "confidence": 0.98
+    },
+    {
+      "type": "fact",
+      "content": "王奶奶每天早上 8 点吃降压药"
+    }
+  ],
+  "steps": [
+    {
+      "name": "老人提问：老花镜在哪",
+      "perception": {
+        "timestamp": "09:12",
+        "scene": "客厅",
+        "person_state": "坐在沙发上翻找",
+        "visible_objects": ["茶杯", "电视", "报纸"],
+        "speech": "我的老花镜呢？"
+      },
+      "expect": {
+        "feedback_contains": "客厅茶几",
+        "tool": "记忆库检索"
+      }
+    },
+    {
+      "name": "老人找到老花镜，记忆复核更新",
+      "perception": {
+        "timestamp": "09:13",
+        "scene": "客厅茶几",
+        "person_state": "起身走向茶几",
+        "visible_objects": ["老花镜"],
+        "speech": "找到了"
+      },
+      "expect": {
+        "feedback_contains": "记下了",
+        "memory_update": true
+      }
+    }
+  ]
+}

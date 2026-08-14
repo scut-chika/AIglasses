@@ -1,0 +1,73 @@
+{
+  "title": "闭环三 · 出门提醒（场景触发的主动 Agent）",
+  "agent_name": "暖眸",
+  "elder_name": "王奶奶",
+  "context": {
+    "weather": "雨",
+    "kitchen_fire_on": true
+  },
+  "initial_memory": [
+    {
+      "type": "item",
+      "object": "老花镜",
+      "location": "客厅茶几",
+      "time": "昨天 14:32",
+      "confidence": 0.9
+    },
+    {
+      "type": "item",
+      "object": "降压药",
+      "location": "餐桌药盒",
+      "time": "昨天 08:00",
+      "confidence": 0.98
+    },
+    {
+      "type": "fact",
+      "content": "王奶奶每天早上 8 点吃降压药"
+    }
+  ],
+  "steps": [
+    {
+      "name": "识别到走向门口：天气 + 室内状态联动提醒",
+      "perception": {
+        "timestamp": "08:50",
+        "scene": "客厅",
+        "person_state": "走向门口",
+        "visible_objects": ["门口", "雨伞架"],
+        "speech": null
+      },
+      "expect": {
+        "feedback_contains": "带伞",
+        "trigger": "场景触发",
+        "tool": "天气 API + 室内状态记忆"
+      }
+    },
+    {
+      "name": "老人返回厨房关火，状态确认",
+      "perception": {
+        "timestamp": "08:52",
+        "scene": "厨房",
+        "person_state": "站立",
+        "visible_objects": ["灶台"],
+        "speech": "火关了"
+      },
+      "expect": {
+        "feedback_contains": "放心出门",
+        "memory_update": true
+      }
+    },
+    {
+      "name": "再次走向门口：只提醒天气，不再重复关火提醒",
+      "perception": {
+        "timestamp": "08:54",
+        "scene": "客厅",
+        "person_state": "再次走向门口",
+        "visible_objects": ["门口"],
+        "speech": null
+      },
+      "expect": {
+        "feedback_contains": "带伞"
+      }
+    }
+  ]
+}

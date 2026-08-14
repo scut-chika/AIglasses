@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暖眸 · 居家养老 AI 眼镜智能体 Demo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">暖眸</span>
+      <span class="tagline">看得见 · 记得住 · 靠得住</span>
+    </div>
+    <div class="badge">初赛 Demo · 无需硬件 · 浏览器直接运行</div>
+  </header>
+
+  <nav class="tabs" id="sceneTabs"></nav>
+
+  <main class="layout">
+    <section class="panel visual-panel">
+      <div class="panel-title">第一视角 · 实时感知（模拟）</div>
+      <div class="scene-intro" id="sceneIntro"></div>
+      <div class="scene-stage">
+        <div class="scene-icon" id="sceneIcon">🕶️</div>
+        <div class="scene-name" id="sceneName">等待开始</div>
+      </div>
+      <div class="step-name" id="stepName">—</div>
+      <div class="trigger-badge" id="triggerBadge" hidden></div>
+      <div class="perception-line">
+        <div class="kv"><span class="k">人物状态</span><span class="v" id="personState">—</span></div>
+        <div class="kv"><span class="k">可见物体</span><span class="v chips" id="visibleChips"></span></div>
+        <div class="kv"><span class="k">老人语音</span><span class="v" id="elderSpeech">—</span></div>
+      </div>
+      <div class="bubbles">
+        <div class="bubble elder" id="elderBubble" hidden></div>
+        <div class="bubble agent" id="agentBubble" hidden></div>
+      </div>
+    </section>
+
+    <section class="panel log-panel">
+      <div class="panel-title">Agent 决策轨迹（感知 → 理解 → 触发 → 工具 → 记忆 → 反馈）</div>
+      <div class="trace" id="traceLog"></div>
+      <div class="controls">
+        <button id="btnPrev" title="上一步">⏮ 上一步</button>
+        <button id="btnNext" class="primary">下一步 ▶</button>
+        <button id="btnAuto">自动播放 ▶</button>
+        <button id="btnTts">语音 🔊</button>
+        <button id="btnReset">重置 ↺</button>
+      </div>
+      <div class="step-indicator" id="stepIndicator"></div>
+    </section>
+  </main>
+
+  <section class="memory-wrap">
+    <div class="panel memory-panel">
+      <div class="panel-title">长期记忆 · 物品位置</div>
+      <div id="memoryItems" class="memory-list"></div>
+    </div>
+    <div class="panel memory-panel">
+      <div class="panel-title">事件记录 · 健康日志</div>
+      <div id="memoryEvents" class="memory-list"></div>
+    </div>
+  </section>
+
+  <footer class="points">
+    <span>第一视角：看到老人看到的</span>
+    <span>语音交互：说比按方便</span>
+    <span>实时感知：场景 / 物体 / 状态</span>
+    <span>随身陪伴：主动提醒与记忆</span>
+    <span>轻量反馈：一句话 / 震动 / 灯</span>
+  </footer>
+
+  <script src="js/agent.js"></script>
+  <script src="js/scenes.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

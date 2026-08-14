@@ -1,0 +1,73 @@
+{
+  "title": "闭环二 · 用药提醒与确认（主动 Agent）",
+  "agent_name": "暖眸",
+  "elder_name": "王奶奶",
+  "context": {
+    "weather": "雨",
+    "kitchen_fire_on": false
+  },
+  "initial_memory": [
+    {
+      "type": "item",
+      "object": "老花镜",
+      "location": "客厅茶几",
+      "time": "昨天 14:32",
+      "confidence": 0.9
+    },
+    {
+      "type": "item",
+      "object": "降压药",
+      "location": "餐桌药盒",
+      "time": "昨天 08:00",
+      "confidence": 0.98
+    },
+    {
+      "type": "fact",
+      "content": "王奶奶每天早上 8 点吃降压药"
+    }
+  ],
+  "steps": [
+    {
+      "name": "08:00 时间触发，主动提醒服药",
+      "perception": {
+        "timestamp": "08:00",
+        "scene": "卧室",
+        "person_state": "坐在床边",
+        "visible_objects": [],
+        "speech": null
+      },
+      "expect": {
+        "feedback_contains": "该吃降压药了",
+        "trigger": "时间触发"
+      }
+    },
+    {
+      "name": "老人应答并取药，视觉确认",
+      "perception": {
+        "timestamp": "08:02",
+        "scene": "餐厅",
+        "person_state": "站立",
+        "visible_objects": ["降压药药盒"],
+        "speech": "好，我这就吃"
+      },
+      "expect": {
+        "feedback_contains": "降压药"
+      }
+    },
+    {
+      "name": "老人确认服药，写入健康日志",
+      "perception": {
+        "timestamp": "08:04",
+        "scene": "餐厅",
+        "person_state": "坐下喝水",
+        "visible_objects": ["水杯"],
+        "speech": "吃完了"
+      },
+      "expect": {
+        "feedback_contains": "已记录",
+        "tool": "健康日志",
+        "memory_update": true
+      }
+    }
+  ]
+}

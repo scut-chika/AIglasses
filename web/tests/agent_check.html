@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>暖眸 Agent 逻辑校验（浏览器版）</title>
+</head>
+<body>
+  <pre id="result">running...</pre>
+  <script src="../js/agent.js"></script>
+  <script src="../js/scenes.js"></script>
+  <script>
+    (function () {
+      let failures = 0;
+      const lines = [];
+      function assert(cond, msg) {
+        lines.push((cond ? 'PASS  ' : 'FAIL  ') + msg);
+        if (!cond) failures++;
+      }
+
+      SCENES.forEach(scene => {
+        lines.push('[' + scene.id + '] ' + scene.name);
+        const memory = new MemoryStore(scene.initialMemory);
+        const agent = new WarmEyeAgent(memory, '王奶奶', '暖眸', scene.context);
+        scene.steps.forEach((step, i) => {
+          const r = agent.tick(step.perception);
+          const text = r.feedback && r.feedback.text ? r.feedback.text : '';
+          lines.push('  步骤' + (i + 1) + '：' + step.name);
+          r.trace.forEach(t => lines.push('    ' + t.label + ' | ' + t.text));
+          assert(text.length > 0, '步骤' + (i + 1) + ' 有语音反馈');
+          const exp = step.expect || {};
+          if (exp.feedback_contains) assert(text.includes(exp.feedback_contains), '反馈包含「' + exp.feedback_contains + '」');
+          if (exp.tool) assert(r.trace.some(t => t.kind === 'tool' && t.text.includes(exp.tool)), '调用工具「' + exp.tool + '」');
+          if (exp.trigger) assert(r.trace.some(t => t.kind === 'trigger' && t.text.includes(exp.trigger)), '触发「' + exp.trigger + '」');
+        });
+      });
+
+      lines.push(failures ? 'RESULT: FAIL ' + failures : 'RESULT: ALL PASS');
+      document.getElementById('result').textContent = lines.join('\n');
+    })();
+  </script>
+</body>
+</html>
