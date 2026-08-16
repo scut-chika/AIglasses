@@ -44,8 +44,9 @@
 │   ├── config.example.json      #   配置模板
 │   └── README.md                #   完整使用说明
 ├── docs/
+│   ├── 产品简介.md               # 300 字产品简介
 │   ├── 暖眸-产品设计方案.md       # 功能、Agent 架构、闭环、合规、迭代
-│   └── demo演示脚本.md            # 视频分镜脚本（Web 录屏方案）
+│   └── 功能闭环演示.md            # 场景化功能闭环演示（模拟真实使用）
 ├── demo/                         # Python 版 Mock 演示器（接入真机前的骨架）
 │   ├── main.py / agent.py / memory.py
 │   ├── scenes/                   # 三个闭环场景脚本

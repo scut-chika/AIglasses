@@ -179,7 +179,7 @@ add_text(s, 1.15, 2.5, 11.4, 0.5, "—— 项目说明 ——", size=20, color=A
 add_text(s, 1.15, 3.35, 11.4, 0.45, "赛题方向：AI+眼镜 · 下一代个人智能终端原生智能体", size=14, color=TEXT)
 add_text(s, 1.15, 3.8, 11.4, 0.45, "赛道：生活健康    重点验证：第一视角 / 语音交互 / 实时感知 / 随身陪伴 / 轻量反馈", size=13.5, color=MUTED)
 add_text(s, 1.15, 4.55, 11.4, 0.4, "作品形式：真实可运行 Agent 应用（用户提供 AI Key 即可运行）", size=14, bold=True, color=GREEN)
-add_text(s, 1.15, 5.0, 11.4, 0.4, "＋ Web 概念演示（无需 Key）＋ 演示视频脚本 ＋ 设计文档", size=13, color=MUTED)
+add_text(s, 1.15, 5.0, 11.4, 0.4, "＋ Web 概念演示（无需 Key）＋ 功能闭环演示 ＋ 设计文档", size=13, color=MUTED)
 add_text(s, 1.15, 6.35, 11.4, 0.4, "队伍：＿＿＿＿＿＿   |   2026 年 8 月", size=12.5, color=MUTED)
 set_notes(s, "本 PPT 为项目说明文档，按「赛题理解→需求→设计→实现→验证→交付」组织。")
 
@@ -596,10 +596,10 @@ add_header(s, 22, "10 迭代计划 · 交付物清单", "参赛提交材料")
 deliverables = [
     ("真实可用版", "app/：零依赖 Agent 应用，接入 AI Key 即用", GREEN),
     ("概念演示版", "web/ 浏览器版 + demo/ Python 版（无需 Key）", PER),
-    ("设计文档", "docs/：产品设计方案、演示分镜脚本", ACCENT),
+    ("设计文档", "docs/：产品简介、产品设计方案、功能闭环演示", ACCENT),
     ("项目说明 PPT", "本文件（20 页，文档向）", AMBER),
     ("打包与仓库", "zip 提交包 + GitHub 仓库（AIglasses）", RED),
-    ("验证材料", "端到端测试 + 演示视频脚本", MUTED),
+    ("验证材料", "端到端测试 + 功能闭环演示（场景化）", MUTED),
 ]
 for i, (t, d, c) in enumerate(deliverables):
     r, cc = divmod(i, 2)
@@ -613,9 +613,17 @@ add_footer(s, 22)
 set_notes(s, "结尾汇总交付物，强调可复现、可验证。")
 
 # ---------------- 保存 ----------------
+import argparse
 import os
 
-out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "暖眸-居家养老AI眼镜智能体-项目说明.pptx")
-prs.save(out)
-print("已生成：", out)
+_parser = argparse.ArgumentParser(description="生成暖眸项目说明 PPT")
+_parser.add_argument(
+    "--out",
+    default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "暖眸-居家养老AI眼镜智能体-项目说明.pptx"),
+    help="输出 pptx 路径",
+)
+_args = _parser.parse_args()
+
+prs.save(_args.out)
+print("已生成：", _args.out)
 print("页数：", len(prs.slides))
