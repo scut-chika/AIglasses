@@ -1,0 +1,22 @@
+{
+  "agent": {
+    "elder_name": "王奶奶",
+    "agent_name": "暖眸",
+    "timezone": "Asia/Shanghai"
+  },
+  "llm": {
+    "api_key": "sk-你的Key",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-4o-mini",
+    "vision_supported": true,
+    "temperature": 0.3
+  },
+  "medication_plan": [
+    {"name": "降压药", "time": "08:00", "dose": "1粒/日"}
+  ],
+  "weather": {
+    "city": "广州",
+    "api_key": ""
+  },
+  "family_webhook": ""
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暖眸 · 居家养老 AI 眼镜智能体（真实 Agent）</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">暖眸</span>
+      <span class="tagline">真实 Agent · 接入你自己的 AI Key</span>
+    </div>
+    <div class="status-group">
+      <span class="badge" id="healthBadge">检测中…</span>
+      <span class="model-badge" id="modelBadge"></span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="scene-tab active" id="tabUse">智能体操作</button>
+    <button class="scene-tab" id="tabConfig">配置</button>
+  </nav>
+
+  <!-- ============ 操作面板 ============ -->
+  <section id="panelUse">
+    <main class="layout">
+      <section class="panel visual-panel">
+        <div class="panel-title">第一视角 · 实时感知</div>
+        <div class="scene-intro" id="sceneIntro">可开启摄像头拍下老人眼前的画面，或手动描述场景。</div>
+
+        <div class="cam-box">
+          <video id="video" autoplay playsinline muted hidden></video>
+          <img id="framePreview" alt="画面预览" hidden>
+          <div class="cam-placeholder" id="camPlaceholder">🕶️</div>
+        </div>
+        <div class="btn-row">
+          <button id="btnCamera">📷 开启摄像头</button>
+          <button id="btnCapture" disabled>拍照</button>
+          <button id="btnUpload">🖼 上传图片</button>
+          <button id="btnClearFrame">清空画面</button>
+          <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <div class="kv"><span class="k">识别结果</span><span class="v" id="personState">—</span></div>
+        <div class="kv"><span class="k">可见物体</span><span class="v chips" id="visibleChips"></span></div>
+
+        <div class="panel-title sub">手动场景描述（无摄像头时用）</div>
+        <input class="text-input" id="sceneText" placeholder="例：老人走向门口，窗外在下雨">
+        <div class="quick-chips" id="sceneChips">
+          <button data-scene="客厅，老人坐在沙发上翻找东西" data-speech="我的老花镜呢？">👓 找老花镜</button>
+          <button data-scene="老人走向门口" data-speech="">🚪 出门</button>
+          <button data-scene="厨房，老人站在灶台前" data-speech="火关了">🍳 关火</button>
+          <button data-scene="客厅，老人坐着看电视" data-speech="我找不到钥匙了">🔑 找钥匙</button>
+        </div>
+
+        <div class="panel-title sub">老人语音输入</div>
+        <textarea class="text-input speech" id="speech" placeholder="老人说的话（可留空，Agent 会自行判断是否主动开口）"></textarea>
+        <div class="btn-row">
+          <button id="btnAsr">🎤 语音输入</button>
+          <button id="btnClearSpeech">清空</button>
+        </div>
+        <div class="quick-chips" id="speechChips">
+          <button data-speech="我的老花镜呢？">我的老花镜呢？</button>
+          <button data-speech="吃完了">吃完了</button>
+          <button data-speech="好，我这就吃">好，我这就吃</button>
+          <button data-speech="我摔倒了，救命">我摔倒了，救命</button>
+        </div>
+
+        <label class="check-row"><input type="checkbox" id="forceTime"> 模拟 08:00 用药时间到点（演示主动提醒）</label>
+
+        <button class="run-btn" id="btnRun">运行一步 ▶</button>
+        <div class="hint">语音留空时，Agent 将按低打扰原则自行判断是否需要主动开口。</div>
+      </section>
+
+      <section class="panel log-panel">
+        <div class="panel-title">Agent 决策轨迹（真实运行）</div>
+        <div class="trace" id="traceLog"></div>
+        <div class="controls">
+          <button id="btnClearLog">清空日志</button>
+          <button id="btnReset">重置会话</button>
+          <button id="btnTts">语音 🔊</button>
+        </div>
+        <div class="step-indicator" id="statusLine">就绪</div>
+      </section>
+    </main>
+
+    <section class="memory-wrap three">
+      <div class="panel memory-panel">
+        <div class="panel-title">长期记忆 · 物品位置</div>
+        <div id="memoryItems" class="memory-list"></div>
+      </div>
+      <div class="panel memory-panel">
+        <div class="panel-title">事件记录 · 健康日志</div>
+        <div id="memoryEvents" class="memory-list"></div>
+      </div>
+      <div class="panel memory-panel">
+        <div class="panel-title">家人通知</div>
+        <div id="notifyList" class="memory-list"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============ 配置面板 ============ -->
+  <section id="panelConfig" hidden>
+    <div class="panel config-panel">
+      <div class="panel-title">AI 服务配置（Key 仅保存在本机 app/config.json，不会上传）</div>
+      <div class="form-grid">
+        <label>老人姓名<input class="text-input" id="cfgElder" placeholder="王奶奶"></label>
+        <label>Agent 名称<input class="text-input" id="cfgAgentName" placeholder="暖眸"></label>
+        <label>API Key<input class="text-input" id="cfgApiKey" type="password" placeholder="sk-..." autocomplete="off"></label>
+        <label>API 地址（OpenAI 兼容）<input class="text-input" id="cfgBaseUrl" placeholder="https://api.openai.com/v1"></label>
+        <label>模型名<input class="text-input" id="cfgModel" placeholder="gpt-4o-mini"></label>
+        <label>温度（0–1）<input class="text-input" id="cfgTemperature" type="number" step="0.1" min="0" max="1"></label>
+      </div>
+      <label class="check-row"><input type="checkbox" id="cfgVision"> 模型支持图片理解（视觉识别）</label>
+
+      <div class="panel-title sub">用药计划（每行一条：名称 时间 剂量）</div>
+      <textarea class="text-input meds" id="cfgMeds" placeholder="降压药 08:00 1粒/日&#10;降糖药 20:00 1片/日"></textarea>
+
+      <div class="panel-title sub">可选：天气与家人通知</div>
+      <div class="form-grid two">
+        <label>城市<input class="text-input" id="cfgCity" placeholder="广州"></label>
+        <label>OpenWeatherMap Key（可选）<input class="text-input" id="cfgWeatherKey" type="password" placeholder="留空则不查询天气" autocomplete="off"></label>
+      </div>
+      <label>家人通知 Webhook（可选，如钉钉/企业微信机器人）<input class="text-input" id="cfgWebhook" placeholder="https://..."></label>
+
+      <div class="btn-row">
+        <button class="primary-btn" id="btnSaveConfig">保存配置</button>
+        <button id="btnTestConfig">测试连接</button>
+      </div>
+      <div class="hint" id="configResult"></div>
+    </div>
+  </section>
+
+  <footer class="points">
+    <span>第一视角：摄像头 / 照片</span>
+    <span>语音交互：浏览器语音输入 + 朗读</span>
+    <span>实时感知：视觉模型识别场景</span>
+    <span>随身陪伴：主动触发 + 持续记忆</span>
+    <span>轻量反馈：一句话语音</span>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

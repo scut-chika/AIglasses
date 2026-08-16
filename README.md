@@ -33,6 +33,12 @@
 ```text
 .
 ├── README.md                    # 本文件
+├── app/                         # ★ 真实 Agent 版（可用版）：填你自己的 AI Key 即可运行
+│   ├── server.py                #   零依赖 HTTP 服务（Python 标准库）
+│   ├── agent/                   #   Agent 主循环 / LLM / 记忆 / 工具
+│   ├── web/                     #   可视化操作前端（摄像头/语音/配置）
+│   ├── config.example.json      #   配置模板
+│   └── README.md                #   完整使用说明
 ├── docs/
 │   ├── 暖眸-产品设计方案.md       # 功能、Agent 架构、闭环、合规、迭代
 │   └── demo演示脚本.md            # 视频分镜脚本（Web 录屏方案）
@@ -53,7 +59,18 @@
 
 ## 三、快速开始（初赛演示）
 
-**Web Demo（推荐，无需任何安装）**
+**真实 Agent 版（推荐：初赛要求“Agent 真实运行”）**
+
+```powershell
+cd app
+py server.py
+```
+
+浏览器打开 http://127.0.0.1:8000 ，在「配置」页填入你自己的 AI 服务 Key
+（OpenAI / DeepSeek / 通义千问 / Ollama 等兼容接口均可），即可用摄像头、
+照片、语音真实运行三个闭环。详见 [app/README.md](app/README.md)。
+
+**Web Demo（概念演示版，无需 Key，规则版 Agent）**
 
 ```powershell
 cd web

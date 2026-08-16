@@ -1,0 +1,1 @@
+# 运行数据目录：config 保存到 app/config.json，记忆保存到 app/data/memory.json（均已 gitignore）
