@@ -193,7 +193,7 @@ items = [
     ("4", "功能设计", "7 项能力、P0/P1 分层、明确不做"),
     ("5", "核心任务闭环", "找物 / 用药 / 出门 / 跌倒 四个闭环"),
     ("6", "Agent 设计与架构", "主动触发引擎、分层架构、记忆系统"),
-    ("7", "技术实现与使用", "真实可用版 app/、配置、操作"),
+    ("7", "技术实现与产品形态", "真实版 app/、系统使用、双端 App 构想"),
     ("8", "数据与合规边界", "授权、隐私、风险、行业边界"),
     ("9", "Demo 与验证", "真实运行演示、端到端测试"),
     ("10", "迭代计划与交付物", "版本路线、参赛交付清单"),
@@ -449,12 +449,93 @@ feats = [
 for i, f in enumerate(feats):
     r, c = divmod(i, 2)
     add_text(s, 0.6 + c * 6.16, 5.3 + r * 0.5, 5.9, 0.4, f, size=12.5)
+add_text(s, 0.6, 6.35, 12.13, 0.5,
+         "说明：网页端为初赛演示形态（便于评委打开浏览器复现）；正式产品形态为「AI 眼镜 + 老人端 App + 子女端 App」，见下两页。",
+         size=12.5, color=AMBER)
 add_footer(s, 16)
-set_notes(s, "使用门槛低：不需要硬件、不需要部署云端，本机一条命令启动。")
+set_notes(s, "使用门槛低：不需要硬件、不需要部署云端，本机一条命令启动。网页端是初赛演示形态。")
 
-# ================= 17 数据与合规 =================
+# ================= 17 产品形态（一）老人端 =================
 s = new_slide()
-add_header(s, 17, "8 数据来源与合规边界", "数据授权 · 隐私保护 · 风险提示 · 行业边界")
+add_header(s, 17, "7 技术实现 · 产品形态：老人端 App 构想",
+           "网页端为初赛演示形态；正式产品为「AI 眼镜 + 老人端 App + 子女端 App」")
+forms = [
+    ("初赛：Web 演示", "app/ + web/\n浏览器打开即用", ACCENT),
+    ("正式：AI 眼镜", "语音 + 第一视角\n随身主入口", GREEN),
+    ("老人端 App", "适老化大字界面\n设置 / SOS / 记忆", PER),
+    ("子女端 App", "远程日报 / 通知\n留言 / 看护", AMBER),
+]
+fw = (12.13 - 0.9) / 4
+for i, (t, d, c) in enumerate(forms):
+    box = add_rect(s, 0.6 + i * (fw + 0.3), 1.42, fw, 1.05, fill=PANEL2, line=c, radius=0.08)
+    shape_text(box, f"{t}\n{d}", size=12)
+    if i < 3:
+        add_arrow(s, 0.6 + (i + 1) * (fw + 0.3) - 0.27, 1.8, 0.24, 0.28, color=MUTED, direction="right")
+add_text(s, 0.6, 2.72, 12.13, 0.35,
+         "老人端设计原则：大字大按钮（≥20pt / ≥56pt）· 语音优先 · 层级≤2 · 防误触二次确认 · 支持方言",
+         size=13, bold=True, color=AMBER)
+app_funcs = [
+    ("首页 · 今日状态", "大字时间/天气/服药状态\n一键“暖眸播报”"),
+    ("语音助手", "全双工对话\n常用问题快捷卡"),
+    ("找物记录", "物品位置清单\n“我的东西都在哪”"),
+    ("用药管理", "计划卡片 + 已服/待服\n漏服提醒与记录"),
+    ("安全守护", "跌倒记录 / 当前位置\nSOS 说明与联系人"),
+    ("亲情留言", "子女语音留言播放\n家庭相册回忆"),
+]
+gw = (12.13 - 0.3) / 3
+for i, (t, d) in enumerate(app_funcs):
+    r, c = divmod(i, 3)
+    box = add_rect(s, 0.6 + c * (gw + 0.15), 3.15 + r * 1.1, gw, 0.95, fill=PANEL, line=BORDER, radius=0.1)
+    shape_text(box, f"{t}\n{d}", size=11.5)
+box = add_rect(s, 0.6, 5.5, 12.13, 1.35, fill=PANEL2, line=ACCENT, radius=0.06)
+shape_text(box,
+           "首页界面构想（线框）：顶部 大字时间 + 天气 ┃ 中部 用药大卡片（今日已服 ✓ / 待服）┃ "
+           "底部 三大金刚按钮：语音助手 · 找东西 · SOS（红色大字）",
+           size=12.5)
+add_footer(s, 17)
+set_notes(s, "老人端是眼镜的伴侣屏：大屏展示、设置、SOS 与记忆查看；交互以语音优先，严格适老化。")
+
+# ================= 18 产品形态（二）子女端 =================
+s = new_slide()
+add_header(s, 18, "7 技术实现 · 产品形态：子女端 App 与双端联动", "子女端：远程守护与低打扰沟通")
+family_funcs = [
+    ("今日概况日报", "“今天都挺好”\n异常才展开详情"),
+    ("实时状态", "位置 / 眼镜电量\n是否佩戴 / 活动"),
+    ("用药看板", "今日与本周记录\n漏服红色提醒"),
+    ("异常通知", "跌倒 / 久未活动\n深夜未归 + 快照"),
+    ("沟通", "语音留言给老人\n视频通话入口"),
+    ("隐私与偏好", "可见范围 / 通知级别\n低打扰设置"),
+]
+gw = (12.13 - 0.3) / 3
+for i, (t, d) in enumerate(family_funcs):
+    r, c = divmod(i, 3)
+    box = add_rect(s, 0.6 + c * (gw + 0.15), 1.5 + r * 1.1, gw, 0.95, fill=PANEL, line=BORDER, radius=0.1)
+    shape_text(box, f"{t}\n{d}", size=11.5)
+add_text(s, 0.6, 3.95, 12.13, 0.35, "双端与眼镜联动（数据流）", size=14, bold=True)
+flow = [
+    ("AI 眼镜", "感知 / 语音 / 反馈", ACCENT),
+    ("老人端 App", "大字显示 / SOS / 设置", PER),
+    ("云端", "记忆 + 健康日志摘要", MUTED),
+    ("子女端 App", "日报 / 通知 / 留言", AMBER),
+]
+fw = (12.13 - 0.6) / 4
+for i, (t, d, c) in enumerate(flow):
+    box = add_rect(s, 0.6 + i * (fw + 0.2), 4.4, fw, 0.8, fill=PANEL2, line=c, radius=0.08)
+    shape_text(box, f"{t}\n{d}", size=11.5)
+    if i < 3:
+        add_arrow(s, 0.6 + (i + 1) * (fw + 0.2) - 0.2, 4.66, 0.2, 0.26, color=MUTED, direction="right")
+add_text(s, 0.6, 5.5, 6.4, 0.6,
+         "首页界面构想：老人状态卡（头像 + 今日摘要）\n底部 Tab：首页 / 用药 / 安全 / 我的", size=12.5)
+add_text(s, 7.1, 5.5, 5.7, 0.6,
+         "通知分级：正常一句“今天都挺好”\n提醒（漏服 / 久未活动）· 紧急（跌倒红色）", size=12.5)
+add_text(s, 0.6, 6.4, 12.13, 0.4,
+         "隐私边界：子女仅可见授权摘要（服药 / 出门 / 异常）；完整记忆留在本机，可删除", size=12.5, color=MUTED)
+add_footer(s, 18)
+set_notes(s, "子女端价值：低打扰守护——正常不打扰，异常才提醒；所有数据按授权最小可见。")
+
+# ================= 19 数据与合规 =================
+s = new_slide()
+add_header(s, 19, "8 数据来源与合规边界", "数据授权 · 隐私保护 · 风险提示 · 行业边界")
 comps = [
     ("数据来源", "用户与家属授权采集\n开源/自采模拟数据\n演示用剧本数据", PER),
     ("隐私保护", "本地优先 · 最小必要\n人脸模糊 · 加密存储\n可查看、可删除、可撤回", GREEN),
@@ -467,12 +548,12 @@ for i, (t, d, c) in enumerate(comps):
     shape_text(box, f"{t}\n\n{d}", size=12.5)
 add_text(s, 0.6, 5.4, 12.1, 0.4, "核心原则：服务的是“提醒与陪伴”，把医疗诊断、急救责任明确挡在边界之外。", size=15, bold=True, color=AMBER)
 add_text(s, 0.6, 5.95, 12.1, 0.4, "真实版实现：API Key 仅保存在本机 app/config.json（已 gitignore，不会进入代码仓库）", size=13, color=MUTED)
-add_footer(s, 17)
+add_footer(s, 19)
 set_notes(s, "合规是评审必问项：数据从哪来、存哪里、谁能删、出问题谁负责。")
 
-# ================= 18 Demo 与验证 =================
+# ================= 20 Demo 与验证 =================
 s = new_slide()
-add_header(s, 18, "9 Demo 与验证", "真实运行演示 + 自动化测试 + 无 Key 兜底")
+add_header(s, 20, "9 Demo 与验证", "真实运行演示 + 自动化测试 + 无 Key 兜底")
 box = add_rect(s, 0.6, 1.6, 5.9, 3.4, fill=PANEL, line=ACCENT, radius=0.06)
 shape_text(box, "真实运行演示（app/）\n\n① 摄像头/照片 → 视觉识别\n② 三个闭环逐步运行\n③ 决策轨迹实时展示\n④ 记忆面板实时变化\n\n浏览器即可复现", size=13)
 box = add_rect(s, 6.75, 1.6, 5.98, 3.4, fill=RGBColor(0x0B, 0x0E, 0x1C), line=BORDER, radius=0.06)
@@ -487,12 +568,12 @@ for i, (t, d) in enumerate(checks):
     r, c = divmod(i, 2)
     box = add_rect(s, 0.6 + c * 6.16, 5.3 + r * 0.72, 5.96, 0.6, fill=PANEL2, line=BORDER, radius=0.1)
     add_text(s, 0.85 + c * 6.16, 5.42 + r * 0.72, 5.5, 0.45, f"{t}：{d}", size=11.5)
-add_footer(s, 18)
+add_footer(s, 20)
 set_notes(s, "验证材料：可运行代码 + 自动化测试 + 演示视频 + 在线仓库，评审可自行复现。")
 
-# ================= 19 迭代计划 =================
+# ================= 21 迭代计划 =================
 s = new_slide()
-add_header(s, 19, "10 迭代计划", "从初赛可运行版本到长期陪伴生态")
+add_header(s, 21, "10 迭代计划", "从初赛可运行版本到长期陪伴生态")
 vers = [
     ("V1 · 初赛交付", "真实 Agent 版（app/）\n找物/用药/出门三闭环\nWeb 概念演示 + 材料", ACCENT),
     ("V2 · 安全守护", "跌倒检测求助\n家人健康日报\n心率/血氧体征", GREEN),
@@ -506,12 +587,12 @@ for i, (t, d, c) in enumerate(vers):
     if i < 3:
         add_arrow(s, 0.6 + (i + 1) * (cw5 + 0.3) - 0.26, 2.85, 0.24, 0.3, color=MUTED, direction="right")
 add_text(s, 0.6, 4.95, 12.1, 0.5, "设计原则：先做深一个场景，再做宽多个场景；每一步都保留可演示、可验证的任务闭环。", size=15, bold=True, color=AMBER)
-add_footer(s, 19)
+add_footer(s, 21)
 set_notes(s, "V1 是本次初赛交付，后续版本保持闭环可验证原则。")
 
-# ================= 20 交付物与结尾 =================
+# ================= 22 交付物与结尾 =================
 s = new_slide()
-add_header(s, 20, "10 迭代计划 · 交付物清单", "参赛提交材料")
+add_header(s, 22, "10 迭代计划 · 交付物清单", "参赛提交材料")
 deliverables = [
     ("真实可用版", "app/：零依赖 Agent 应用，接入 AI Key 即用", GREEN),
     ("概念演示版", "web/ 浏览器版 + demo/ Python 版（无需 Key）", PER),
@@ -528,7 +609,7 @@ for i, (t, d, c) in enumerate(deliverables):
 add_text(s, 0.9, 5.0, 11.5, 0.8, "暖眸——看得见、记得住、靠得住", size=26, bold=True, color=ACCENT, align=PP_ALIGN.CENTER)
 add_text(s, 0.9, 5.9, 11.5, 0.5, "让每一位独居老人，都有一位 24 小时在身边的智能守护者", size=15, color=TEXT, align=PP_ALIGN.CENTER)
 add_text(s, 0.9, 6.55, 11.5, 0.4, "谢谢 · 请各位评委指正", size=14, color=MUTED, align=PP_ALIGN.CENTER)
-add_footer(s, 20)
+add_footer(s, 22)
 set_notes(s, "结尾汇总交付物，强调可复现、可验证。")
 
 # ---------------- 保存 ----------------
